@@ -1,7 +1,9 @@
-<<<<<<< HEAD
 # Major_OMR
 Optical Music Recognition System
-=======
+
+# Model
+Download the pre-trained Semantic Model Here: https://grfia.dlsi.ua.es/primus/models/PrIMuS/Semantic-Model.zip
+Mirror Link: <Google Drive link>
 # tf-deep-omr
 
 TensorFlow code to perform end-to-end Optical Music Recognition on monophonic scores through Convolutional Recurrent Neural Networks and CTC-based training.
@@ -121,4 +123,3 @@ As discussed in the paper, this representation often misses the last barline.
 
 * Jorge Calvo Zaragoza (jcalvo@dlsi.ua.es)
 
->>>>>>> 336547b6c99bb419fcc61f660b5d43c4537fe0bf
