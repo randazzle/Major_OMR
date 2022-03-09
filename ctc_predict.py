@@ -3,6 +3,7 @@ import ctc_utils
 import cv2
 import numpy as np
 import simpleaudio as sa
+import wavio
 import tensorflow.compat.v1 as tf_v1
 import numpy as np
 from midi.player import *
@@ -13,42 +14,45 @@ tf.compat.v1.disable_eager_execution()
 i = segment.totalimages
 SEMANTIC = ''
 
+model = "Models/semantic_model.meta"
+voc_file = "Data/vocabulary_semantic.txt"
+
+tf_v1.reset_default_graph()
+sess = tf_v1.InteractiveSession()
+
+# Read the dictionary
+dict_file = open(voc_file,'r')
+dict_list = dict_file.read().splitlines()
+int2word = dict()
+for word in dict_list:
+    word_idx = len(int2word)
+    int2word[word_idx] = word
+dict_file.close()
+
+# Restore weights
+saver = tf_v1.train.import_meta_graph(model)
+saver.restore(sess,model[:-5])
+
+graph = tf_v1.get_default_graph()
+
+input = graph.get_tensor_by_name("model_input:0")
+seq_len = graph.get_tensor_by_name("seq_lengths:0")
+rnn_keep_prob = graph.get_tensor_by_name("keep_prob:0")
+height_tensor = graph.get_tensor_by_name("input_height:0")
+width_reduction_tensor = graph.get_tensor_by_name("width_reduction:0")
+logits = tf_v1.get_collection("logits")[0]
+
+# Constants that are saved inside the model itself
+WIDTH_REDUCTION, HEIGHT = sess.run([width_reduction_tensor, height_tensor])
+
+decoded, _ = tf_v1.nn.ctc_greedy_decoder(logits, seq_len)
+
+open("output/notes.txt", "w").close()
+
 for x in range (1,i):
 
     imagep = 'temp/segment'+str(x)+'.jpg'
-    model = "Models/semantic_model.meta"
-    voc_file = "Data/vocabulary_semantic.txt"
     print(imagep)
-
-    tf_v1.reset_default_graph()
-    sess = tf_v1.InteractiveSession()
-
-    # Read the dictionary
-    dict_file = open(voc_file,'r')
-    dict_list = dict_file.read().splitlines()
-    int2word = dict()
-    for word in dict_list:
-        word_idx = len(int2word)
-        int2word[word_idx] = word
-    dict_file.close()
-
-    # Restore weights
-    saver = tf_v1.train.import_meta_graph(model)
-    saver.restore(sess,model[:-5])
-
-    graph = tf_v1.get_default_graph()
-
-    input = graph.get_tensor_by_name("model_input:0")
-    seq_len = graph.get_tensor_by_name("seq_lengths:0")
-    rnn_keep_prob = graph.get_tensor_by_name("keep_prob:0")
-    height_tensor = graph.get_tensor_by_name("input_height:0")
-    width_reduction_tensor = graph.get_tensor_by_name("width_reduction:0")
-    logits = tf_v1.get_collection("logits")[0]
-
-    # Constants that are saved inside the model itself
-    WIDTH_REDUCTION, HEIGHT = sess.run([width_reduction_tensor, height_tensor])
-
-    decoded, _ = tf_v1.nn.ctc_greedy_decoder(logits, seq_len)
 
     image = cv2.imread(imagep, 0)
     image = ctc_utils.resize(image, HEIGHT)
@@ -79,17 +83,6 @@ for x in range (1,i):
 
 
 if __name__ == '__main__':
-    # f = open('output/notes.txt','r')
-    # Notes = f.read()
-    # print("Read: ", Notes)
-    # print("Type of Note: ", type(Notes))
-    # print("Type of Sem: ", type(SEMANTIC))
-
-    # Notes = f.readline()
-    # print("Read", Notes)
-    # Notes = f.readlines()
-    # print("Read", Notes)
-
 
     # gets the audio file
     audio = get_sinewave_audio(SEMANTIC)
@@ -99,6 +92,8 @@ if __name__ == '__main__':
     audio *= 32767 / np.max(np.abs(audio))
     #converts it to 16 bits
     audio = audio.astype(np.int16)
+    # Saves a .wav output file
+    wavio.write("output\output.wav", audio, 44100, sampwidth=2)
     #plays midi 
     play_obj = sa.play_buffer(audio, 1, 2, 44100)
     #outputs to the console
@@ -107,13 +102,3 @@ if __name__ == '__main__':
         print(f'\n{SEMANTIC}')  
     #stop playback when done
     play_obj.wait_done()
-
-
-
-#parser = argparse.ArgumentParser(description='Decode a music score image with a trained model (CTC).')
-#parser.add_argument('-image',  dest='image', type=str, required=True, help='Path to the input image.')
-#parser.add_argument('-model', dest='model', type=str, required=True, help='Path to the trained model.')
-#parser.add_argument('-vocabulary', dest='voc_file', type=str, required=True, help='Path to the vocabulary file.')
-#args = parser.parse_args()
-
-
