@@ -1,7 +1,7 @@
 import cv2 
 from matplotlib import pyplot as plt
 
-image_file = "samples/fire.jpg"
+image_file = "samples/lost.jpg"
 img = cv2.imread(image_file)
 base_img = img.copy()
 
