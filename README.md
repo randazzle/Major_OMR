@@ -5,6 +5,7 @@ Optical Music Recognition System
 Download the pre-trained Semantic Model Here: https://grfia.dlsi.ua.es/primus/models/PrIMuS/Semantic-Model.zip
 
 Mirror Link: https://drive.google.com/file/d/1VqKffh4E6Ix6_ToA89yjR7WwCzOkRH_3/view?usp=sharing
+
 Extract the model zip file into a new folder "Models" in the main directory.
 
 # Instructions to run the project
