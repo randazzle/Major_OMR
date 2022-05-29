@@ -5,6 +5,21 @@ Optical Music Recognition System
 Download the pre-trained Semantic Model Here: https://grfia.dlsi.ua.es/primus/models/PrIMuS/Semantic-Model.zip
 
 Mirror Link: https://drive.google.com/file/d/1VqKffh4E6Ix6_ToA89yjR7WwCzOkRH_3/view?usp=sharing
+Extract the model zip file into a new folder "Models" in the main directory.
+
+# Instructions to run the project
+Create a virtual environment 'venv' and pip install the packages listed in 'requirements.txt'
+```
+virtualenv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+CD to the main directory and run 'app.py'
+```
+python app.py
+```
+
 # tf-deep-omr
 
 TensorFlow code to perform end-to-end Optical Music Recognition on monophonic scores through Convolutional Recurrent Neural Networks and CTC-based training.
