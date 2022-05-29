@@ -75,13 +75,13 @@ def total_images(image_file):
     #display2("temp/dilate.jpg")
 
     cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = cnts[0] if len(cnts) == 2 else cents[1]
+    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
     cnts = sorted(cnts, key=lambda x:cv2.boundingRect(x)[0])
 
     i = 1
     for c in cnts:
         x, y, w, h = cv2.boundingRect(c)
-        if w > 350:
+        if w > 550:
             roi = img[y:y+h, x:x+w]
             cv2.imwrite("temp/segment" + str(i)+ ".jpg", roi)
             cv2.rectangle(img, (x, y), (x+w, y+h), (36, 266, 12), 2)
