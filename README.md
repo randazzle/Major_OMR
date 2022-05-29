@@ -1,5 +1,5 @@
 # Major_OMR
-Optical Music Recognition System
+Composition Of Music Sheets Using Optical Music Recognition System
 
 # Model
 Download the pre-trained Semantic Model Here: https://grfia.dlsi.ua.es/primus/models/PrIMuS/Semantic-Model.zip
